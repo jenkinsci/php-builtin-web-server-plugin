@@ -8,56 +8,52 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
+import hudson.util.ArgumentListBuilder;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 public class PhpWebserverBuildWrapper extends BuildWrapper {
-
-	private static final PhpWebserverConnector connector = new PhpWebserverConnector();
 	
+	// TODO expose host
 	// TODO expose other options ?
 	// TODO make sure PHP 5.4
 	// TODO allow to set path to php binary ?
 	private final int port;
+	private final String host;
 	private final String root;
-
+	
 	@DataBoundConstructor
-	public PhpWebserverBuildWrapper(int port, String root) {
+	public PhpWebserverBuildWrapper(int port, String host, String root) {
 		this.port = port;
+		this.host = host;
 		this.root = root;
 	}
 
 	public int getPort() {
 		return port;
 	}
-	
+
 	public String getRoot() {
 		return root;
 	}
 	
 	@Override
 	public Environment setUp(AbstractBuild build, final Launcher launcher, BuildListener listener) throws IOException, InterruptedException {		
+		final PhpWebserver server = new PhpWebserver(port, host, root);
 		return new Environment() {
 			@Override
 			public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-				connector.stop(port, root, build.getId());
+				server.stop();
 				return true;
 			}
 		};
 	}
 	
-	@Override
-	public void makeBuildVariables(AbstractBuild build, Map<String,String> variables) {
-		String url = connector.start(port, root, build.getId());
-		variables.put(new String("selenium"), url);
-    }
-
     @Override
     public Environment setUp(Build build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         return setUp(build, launcher, listener);
@@ -76,15 +72,18 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
             try {
             	int port = Integer.parseInt(value);
             	if (port < 0 || port > 65535) {
-            		return FormValidation.error("Wrong port. Should be 0 <= port <= 65535");
-            	}
+            		return FormValidation.error("Should be 0 <= port <= 65535");
+            	} // TODO and not a well-known port ?
+            	// TODO and not a port currently used ?
             }
             catch (NumberFormatException e) {
-            	return FormValidation.error("Wrong port. Should be a numerical value");
+            	return FormValidation.error("Should be a numerical value");
 			}
         	return FormValidation.ok();
         }
 
+        // TODO host should not be empty
+        
         public FormValidation doCheckRoot(@AncestorInPath AbstractProject project, @QueryParameter String value) throws IOException {
             if (0 == value.length()) {
             	return FormValidation.error("Please set a root directory");
