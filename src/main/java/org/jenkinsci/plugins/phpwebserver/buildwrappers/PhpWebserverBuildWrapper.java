@@ -20,7 +20,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 public class PhpWebserverBuildWrapper extends BuildWrapper {
 	
-	// TODO make sure PHP 5.4
 	private final int port;
 	private final String host;
 	private final String root;
@@ -103,7 +102,6 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
             	if (port < 1024 || port > 65535) {
             		return FormValidation.error("Should be 1024 <= port <= 65535");
             	}
-            	// TODO and not a port currently used ?
             }
             catch (NumberFormatException e) {
             	return FormValidation.error("Should be a numerical value");

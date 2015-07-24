@@ -2,15 +2,17 @@ package org.jenkinsci.plugins.phpwebserver.beans;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
 import org.jenkinsci.plugins.phpwebserver.config.PhpWebserverInstallation;
 
 public class PhpWebserver {
-	
+
 	private Process process;
-	
+
+	/**
+	 * Start web server.
+	 */
 	public PhpWebserver(int port, String host, File root) throws IOException {
 		if (!portAvailable(port)) {
 			throw new IllegalStateException("Port "+port+" is already used");
@@ -19,7 +21,9 @@ public class PhpWebserver {
 		process = new ProcessBuilder(php, "--server", host+":"+port, "--docroot", root.getAbsolutePath()).start();
 	}
 
-	// TODO documentation
+	/**
+	 * Stop web server.
+	 */
 	public void stop() {
 		if (process != null) {
 			process.destroy();	
@@ -48,4 +52,5 @@ public class PhpWebserver {
 	    }
 	    return false;
 	}
+
 }
