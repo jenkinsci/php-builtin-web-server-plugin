@@ -8,7 +8,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.BuildWrapperDescriptor;
-import hudson.util.ArgumentListBuilder;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
@@ -19,8 +18,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 public class PhpWebserverBuildWrapper extends BuildWrapper {
 	
-	// TODO expose host
-	// TODO expose other options ?
 	// TODO make sure PHP 5.4
 	// TODO allow to set path to php binary ?
 	private final int port;
@@ -43,7 +40,7 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
 	}
 	
 	@Override
-	public Environment setUp(AbstractBuild build, final Launcher launcher, BuildListener listener) throws IOException, InterruptedException {		
+	public Environment setUp(AbstractBuild build, final Launcher launcher, BuildListener listener) throws IOException {		
 		final PhpWebserver server = new PhpWebserver(port, host, root);
 		return new Environment() {
 			@Override
@@ -73,7 +70,8 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
             	int port = Integer.parseInt(value);
             	if (port < 0 || port > 65535) {
             		return FormValidation.error("Should be 0 <= port <= 65535");
-            	} // TODO and not a well-known port ?
+            	}
+            	// TODO and not a well-known port ?
             	// TODO and not a port currently used ?
             }
             catch (NumberFormatException e) {
