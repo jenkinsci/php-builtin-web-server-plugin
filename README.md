@@ -7,6 +7,8 @@
  * `git clone https://github.com/Fengtan/php-builtin-web-server-plugin`
  * `cd php-builtin-web-server-plugin/`
  * `mvn clean install -DskipTests=true`
+ 
+Alternatively, download a pre-compiled .hpi archive from the [releases page] (https://github.com/Fengtan/php-builtin-web-server-plugin/releases)
 
 #### Installation
 
