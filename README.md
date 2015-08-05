@@ -1,6 +1,9 @@
 [Jenkins](https://jenkins-ci.org/) plugin to run a [PHP built-in web server](http://php.net/manual/en/features.commandline.webserver.php) for each build.
+This is useful if you need to run tests on a local website and less overkill than making Apache point at the workspace root.
 
-![alt tag](https://raw.github.com/Fengtan/php-builtin-web-server-plugin/master/screenshot.png)
+See https://wiki.jenkins-ci.org/display/JENKINS/PHP+Built-in+Web+Server+Plugin
+
+![alt tag](https://raw.github.com/jenkinsci/php-builtin-web-server-plugin/master/screenshot.png)
 
 #### Compilation
 
