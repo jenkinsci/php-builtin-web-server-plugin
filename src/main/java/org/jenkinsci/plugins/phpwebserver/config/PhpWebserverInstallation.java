@@ -32,7 +32,7 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Handle PHP installations.
  * 
- * @author Fengtan https://github.com/Fengtan/
+ * @author Fengtan https://github.com/fengtan/
  *
  */
 public class PhpWebserverInstallation extends ToolInstallation implements NodeSpecific<PhpWebserverInstallation>, EnvironmentSpecific<PhpWebserverInstallation> {

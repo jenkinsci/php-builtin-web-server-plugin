@@ -6,6 +6,12 @@ import java.net.ServerSocket;
 
 import org.jenkinsci.plugins.phpwebserver.config.PhpWebserverInstallation;
 
+/**
+ * Run/stop a PHP built-in web server.
+ * 
+ * @author Fengtan https://github.com/fengtan/
+ *
+ */
 public class PhpWebserver {
 
 	private Process process;
