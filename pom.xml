@@ -12,7 +12,7 @@
 
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>php-builtin-web-server</artifactId>
-  <version>0.1</version>
+  <version>0.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>PHP Built-in Web Server</name>
   <description>Run a PHP built-in web server for each project build.</description>
