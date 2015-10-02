@@ -9,7 +9,7 @@ import org.jenkinsci.plugins.phpwebserver.config.PhpWebserverInstallation;
 
 /**
  * Run/stop a PHP built-in web server.
- * 
+ *
  * @author Fengtan https://github.com/fengtan/
  *
  */
@@ -20,15 +20,17 @@ public class PhpWebserver {
 	/**
 	 * Start web server.
 	 */
-	public PhpWebserver(int port, String host, File root) throws IOException {
+	public PhpWebserver(int port, String host, File root, Boolean importEnvironment) throws IOException {
 		if (!portAvailable(port)) {
 			throw new IllegalStateException("Port "+port+" is already used");
 		}
 		String php = PhpWebserverInstallation.getDefaultInstallation().getPhpExe();
 		ProcessBuilder pb = new ProcessBuilder(php, "--server", host+":"+port, "--docroot", root.getAbsolutePath());
-		Map<String, String> systemEnv = System.getenv();
-		Map<String, String> phpEnv = pb.environment();
-		phpEnv.putAll(systemEnv);
+        if(importEnvironment){
+            Map<String, String> systemEnv = System.getenv();
+            Map<String, String> phpEnv = pb.environment();
+            phpEnv.putAll(systemEnv);
+        }
 		process = pb.start();
 	}
 
@@ -37,10 +39,10 @@ public class PhpWebserver {
 	 */
 	public void stop() {
 		if (process != null) {
-			process.destroy();	
+			process.destroy();
 		}
 	}
-	
+
 	/**
 	 * Return false if 'port' is already used, true otherwise.
 	 */

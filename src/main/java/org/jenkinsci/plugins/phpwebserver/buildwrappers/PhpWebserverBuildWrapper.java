@@ -20,27 +20,29 @@ import org.kohsuke.stapler.QueryParameter;
 
 /**
  * Build wrapper to run a PHP built-in web server.
- * 
+ *
  * @author Fengtan https://github.com/fengtan/
  *
  */
 public class PhpWebserverBuildWrapper extends BuildWrapper {
-	
+
 	private final int port;
 	private final String host;
 	private final String root;
-	
+    private final boolean importEnvironment;
+
 	@DataBoundConstructor
-	public PhpWebserverBuildWrapper(int port, String host, String root) {
+	public PhpWebserverBuildWrapper(int port, String host, String root, boolean environment) {
 		this.port = port;
 		this.host = host;
 		this.root = root;
+        this.importEnvironment = environment;
 	}
 
 	public int getPort() {
 		return port;
 	}
-	
+
 	public String getHost() {
 		return host;
 	}
@@ -48,13 +50,17 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
 	public String getRoot() {
 		return root;
 	}
-	
+
+    public Boolean getImportEnvironment(){
+        return importEnvironment;
+    }
+
 	@Override
-	public Environment setUp(AbstractBuild build, final Launcher launcher, BuildListener listener) {		
+	public Environment setUp(AbstractBuild build, final Launcher launcher, BuildListener listener) {
 		File rootDir = new File(build.getWorkspace().getRemote(), root);
 		try {
 			listener.getLogger().println("[PHP WEB SERVER] Starting server " + host+":"+port+" with document root "+rootDir.getAbsolutePath()+"...");
-			final PhpWebserver server = new PhpWebserver(port, host, rootDir);
+			final PhpWebserver server = new PhpWebserver(port, host, rootDir, importEnvironment);
 			return new Environment() {
 				@Override
 				public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
@@ -71,7 +77,7 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
 			return null;
 		}
 	}
-	
+
     @Override
     public Environment setUp(Build build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
         return setUp(build, launcher, listener);
@@ -83,17 +89,17 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
         public DescriptorImpl() {
             super(PhpWebserverBuildWrapper.class);
         }
-    	
+
         @Override
         public boolean isApplicable(AbstractProject<?, ?> item) {
             return true;
         }
-        
+
         @Override
         public String getDisplayName() {
             return "Run a PHP built-in web server";
         }
-        
+
         /**
          * Field 'port' should not be empty.
          * Field 'port' should be a valid port.
@@ -114,7 +120,7 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
 			}
         	return FormValidation.ok();
         }
-        
+
         /**
          * Field 'host' should not be empty.
          */
@@ -124,7 +130,7 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
             }
         	return FormValidation.ok();
         }
-        
+
         /**
          * Field 'root' should not be empty.
          */
