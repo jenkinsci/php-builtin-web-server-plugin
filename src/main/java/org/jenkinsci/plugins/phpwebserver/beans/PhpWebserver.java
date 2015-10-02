@@ -25,11 +25,11 @@ public class PhpWebserver {
 			throw new IllegalStateException("Port "+port+" is already used");
 		}
 		String php = PhpWebserverInstallation.getDefaultInstallation().getPhpExe();
-		process = new ProcessBuilder(php, "--server", host+":"+port, "--docroot", root.getAbsolutePath());
+		ProcessBuilder pb = new ProcessBuilder(php, "--server", host+":"+port, "--docroot", root.getAbsolutePath());
 		Map<String, String> systemEnv = System.getenv();
-		Map<String, String> phpEnv = process.environment();
+		Map<String, String> phpEnv = pb.environment();
 		phpEnv.putAll(systemEnv);
-		process.start();
+		process = pb.start();
 	}
 
 	/**
