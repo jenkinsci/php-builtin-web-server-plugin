@@ -20,7 +20,7 @@ public class PhpWebserver {
 	/**
 	 * Start web server.
 	 */
-	public PhpWebserver(int port, String host, File root, Boolean importEnvironment) throws IOException {
+	public PhpWebserver(int port, String host, File root, boolean importEnvironment) throws IOException {
 		if (!portAvailable(port)) {
 			throw new IllegalStateException("Port "+port+" is already used");
 		}
