@@ -25,7 +25,7 @@ public class PhpWebserver {
     private Map<String,String> _buildEnvVars;
 
 	/**
-	 * Start web server.
+	 * Initialize paramters
 	 */
 	public PhpWebserver(int port, String host, File root, boolean importEnvironment) throws IllegalStateException {
 		if (!portAvailable(port)) {
@@ -39,6 +39,9 @@ public class PhpWebserver {
         this._importEnvironment = importEnvironment;
 	}
 
+    /**
+     * Start web server
+     */
     public void start() throws IOException {
         String php = PhpWebserverInstallation.getDefaultInstallation().getPhpExe();
         ProcessBuilder pb = new ProcessBuilder(php, "--server", this._host + ":" + this._port, "--docroot", this._root.getAbsolutePath());
@@ -54,20 +57,38 @@ public class PhpWebserver {
 		process = pb.start();
     }
 
+    /**
+     * Set build logger
+     * @param  logger Build logger
+     * @return        self
+     */
     public PhpWebserver setLogger(PrintStream logger) {
         this._logger = logger;
         return this;
     }
 
+    /**
+     * Get build logger
+     * @return Stream for logging output in Jenkins console
+     */
     public PrintStream getLogger() {
         return this._logger;
     }
 
+    /**
+     * Set build environment variables
+     * @param   env Map<String,String> Build environment map
+     * @return  self
+     */
     public PhpWebserver setBuildVars(Map<String,String> env) {
         this._buildEnvVars = env;
         return this;
     }
 
+    /**
+     * Get build environment variables
+     * @return Build environment map
+     */
     public Map<String,String> getBuildVars() {
         return this._buildEnvVars;
     }
