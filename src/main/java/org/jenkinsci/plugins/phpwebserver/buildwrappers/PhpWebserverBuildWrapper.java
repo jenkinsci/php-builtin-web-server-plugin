@@ -61,6 +61,10 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
 		try {
 			listener.getLogger().println("[PHP WEB SERVER] Starting server " + host+":"+port+" with document root "+rootDir.getAbsolutePath()+"...");
 			final PhpWebserver server = new PhpWebserver(port, host, rootDir, importEnvironment);
+            server
+                .setLogger(listener.getLogger())
+                .setBuildVars(build.getEnvironment(listener))
+                .start();
 			return new Environment() {
 				@Override
 				public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
@@ -75,7 +79,10 @@ public class PhpWebserverBuildWrapper extends BuildWrapper {
 		} catch (IOException e) {
 			listener.getLogger().println("[PHP WEB SERVER] Could not start server: "+e.getMessage());
 			return null;
-		}
+		} catch (InterruptedException e) {
+            listener.getLogger().println("[PHP WEB SERVER] Could not start server: "+e.getMessage());
+			return null;
+        }
 	}
 
     @Override
